@@ -1,0 +1,42 @@
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
+import boto3
+import json
+#iam = boto3.client('iam')
+#response = iam.create_user("UserName='aadoshi')
+#Action="GetBucket"
+s3 = boto3.client('s3')
+iam = boto.client('iam')
+s3_check = s3.get_bucket_policy(Bucket='testbucket')
+buc_pol = s3_check['Policy']
+useraccess = [item["Principle"]['AWS'] for item in json.loads(buc_pol)['Statement'] if ['AWS'] in ['Principal']
+print("has access")
+
+#user policy
+#user1 = iam.get_user(UserName=='anurag')
+user1 = iam.get_user_policy(
+    UserName='anurag',
+    PolicyName='testpolicy'
+)
+user_pol = user1['PolicyName']
+userpolicyaccess = [item['Action'] for item in json.loads(user_pol)['Statement'] if 'Action' =='S3:ListAllMyBucket' && 'Resource'=='bucket_arn']
+print("user has access")
+
+#User PB is deny
+response = client.get_user(
+    UserName='anurag',
+    PermissionsBoundary: {
+            'PermissionsBoundaryType': 'Policy',
+            'PermissionsBoundaryArn': 'pb_policy_arn'
+        }
+)
+user_pb_policy = resposne['PermissionsBoundary']['PermissionsBoundaryArn']
+if Action == S3:ListBucket && Effect == Allow && 'Resource'=='bucket_arn' -> User have access
+if Action == S3:ListBucket && Effect == Deny && 'Resource'=='bucket_arn' -> User doesn't have access
+
+
+#Flow chart
+# User IP == GetBucket Allow
+# User IP getbucket deny
+# User IP == GetBucket Allow && PB GetBucket Deny
+# User IP && PB has GetBucket Allow && Resource Policy GetBucket deny
